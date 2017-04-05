@@ -7,15 +7,16 @@ VapourBot is still in development, and new features may be added along the way.
 ## Commands
 
 To use these, simply type out the command preceded by the command prefix. This is customizable and thus may vary from server to server, so ask the person who configured the bot for this.
-| Command                  | What it Does                                                          |
-|--------------------------|-----------------------------------------------------------------------|
-| vapor \<YouTube video\>  | Plays a YouTube video (by name or URL) in vaporwave style.            |
-| vapour \<YouTube video\> | Alias of "vapor".                                                     |
-| nick                     | Changes the bot's nickname in the current server. (Easter egg)        |
-| queue                    | Displays the current queue of requested songs and who requested them. |
-| wide \<text\>            | Converts normal text into fullwidth text.                             |
-| spacify \<text\>         | Inserts a space between each character of a string.                   |
-| help                     | Sends a list of commands and their usage.                             |
+
+Command                  | What it Does                                                         
+------------------------ | ---------------------------------------------------------------------
+`vapor <YouTube video>`  | Plays a YouTube video (by name or URL) in vaporwave style.           
+`vapour <YouTube video>` | Alias of "vapor".                                                    
+`nick`                   | Changes the bot's nickname in the current server. (Easter egg)       
+`queue`                  | Displays the current queue of requested songs and who requested them.
+`wide <text>`            | Converts normal text into fullwidth text.                            
+`spacify <text>`         | Inserts a space between each character of a string.                  
+`help`                   | Sends a list of commands and their usage.                            
 
 ## Installation
 

@@ -1,0 +1,23 @@
+{
+    "name": "VapourBot",
+    "description": "Discord vaporwave music streaming bot",
+    "version": "1.0.0",
+    "author": {
+        "name": "scoliono",
+        "url": "http://github.com/scoliono"
+    },
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "discord.js": "^9.0.0",
+        "ytdl-core": "^0.11.1",
+        "fluent-ffmpeg": "^2.1.0",
+        "async": "^2.1.5",
+        "youtube-search": "^1.0.9"
+    },
+    "keywords": [
+        "discord"
+    ]
+}

@@ -47,46 +47,60 @@ function play(connection, id, msg)
 				reject(Error(err));
 			});
 			ytdl("http://www.youtube.com/watch?v="+id, { filter: 'audioonly' }).on('progress', (chunk, downloaded, total) => {
-				console.log(`PROGRESS: ${downloaded}/${total}`)
+				//console.log(`PROGRESS: ${downloaded}/${total}`)
 				last_progress_update++;
 				// idk
-				if (last_progress_update % 10 == 0)
+				if (last_progress_update % 100 == 0 || downloaded >= total)
 				{
-					setTimeout(() => {dl_msg.edit("Downloading... "+(downloaded / total * 100).toFixed(2) + "% `"+get_spinner()+"`").catch(console.error); last_progress_update = Date.now();}, 500);
-				}
-				if (downloaded >= total)
-				{
-					msg.reply("Processing...");
-					// So that it doesn't fire twice
-					var done_yet = false;
-					ffmpeg(`./downloads/${id}.ogg`).format("wav").audioBitrate('48k').on('progress', function(progress) {
-						console.log('Processing: ' + progress.percent + '% done');
-						if (Math.round(progress.percent) >= 100 && !done_yet)
+					dl_msg.edit("Downloading... "+ ((downloaded >= total) ? ":100: %" : ("`"+get_spinner()+"`")))
+					.then(() => {
+						if (downloaded >= total)
 						{
-							done_yet = true;
-							msg.reply("(1/2) FFmpeg conversion done.");
-							// Floral Shoppe: ~60% tempo, P4 down (-500 cents).
-							exec(`sox ./downloads/${id}.wav ./downloads/${id}p.wav tempo 0.6 pitch -500`, (error, stdout, stderr) => {
-								msg.reply("(2/2) SoX effects done. Will begin streaming.");
-								var stream = fs.createReadStream(`./downloads/${id}p.wav`);
-								connection.playStream(stream).on('end', () => {resolve();});
-								console.log(`Now deleting unprocessed files for ID ${id}...`);
-								var saved = (fs.statSync("./downloads/"+id+".wav").size + fs.statSync("./downloads/"+id+".ogg").size)/1000000.0;
-								exec(`rm ./downloads/${id}.ogg ./downloads/${id}.wav`, (error, stdout, stderr) => {
-									console.log("Conserved "+ saved.toFixed(2) +" MB");
-								});
-								//bot.createMessage(now.txt, `Playing **${now.name}**`);
-								//return stream;
-							});
-						}
-					}).save(`./downloads/${id}.wav`);
+								console.log(downloaded, total)
+								msg.channel.sendMessage("Processing...");
+								// So that it doesn't fire twice
+								var done_yet = false;
+								console.log(id)
+								var command = ffmpeg(`./downloads/${id}.ogg`).format("wav").audioBitrate('48k').on('progress', function(progress) {
+									console.log('Processing: ' + progress.percent + '% done');
+									if (progress.percent === undefined)
+									{
+										console.error("Started processing too early.");
+										//command.kill();
+									}
+									if (Math.round(progress.percent) >= 100 && !done_yet)
+									{
+										done_yet = true;
+										msg.channel.sendMessage("(1/2) FFmpeg conversion done.");
+										// Floral Shoppe: ~60% tempo, P4 down (-500 cents).
+										exec(`sox ./downloads/${id}.wav ./downloads/${id}p.wav tempo 0.6 pitch -500`, (error, stdout, stderr) => {
+											msg.channel.sendMessage("(2/2) SoX effects done. Will begin streaming.");
+											var stream = fs.createReadStream(`./downloads/${id}p.wav`);
+											connection.playStream(stream).on('end', () => {resolve();});
+											console.log(`Now deleting unprocessed files for ID ${id}...`);
+											var saved = (fs.statSync("./downloads/"+id+".wav").size + fs.statSync("./downloads/"+id+".ogg").size)/1024.0/1024.0;
+											exec(`rm ./downloads/${id}.ogg ./downloads/${id}.wav`, (error, stdout, stderr) => {
+												console.log("Conserved "+ saved.toFixed(2) +" MB");
+											});
+											//bot.createMessage(now.txt, `Playing **${now.name}**`);
+											//return stream;
+										});
+									}
+								}).on("error", err => {
+									console.info("FFmpeg is kill");
+									reject(err);
+								}).save(`./downloads/${id}.wav`);
+							}
+					})
+					.catch(console.error);
+					last_progress_update = Date.now();
 				}
 			}).pipe(fs.createWriteStream(`./downloads/${id}.ogg`));
 		}
 		else
 		{
 			console.log("streaming cached");
-			msg.reply("Already downloaded & processed. Streaming cached version...");
+			msg.channel.sendMessage("Already downloaded & processed. Streaming cached version...");
 			var stream = fs.createReadStream("./downloads/"+id+'p.wav');
 			connection.playStream(stream).on('end', () => {resolve();});
 			//return stream;
@@ -97,7 +111,7 @@ function play(connection, id, msg)
 
 function pre_play(msg, id)
 {
-	//msg.delete();
+	msg.delete();
 	if (!msg.member.voiceChannel)
 	{
 		msg.reply("You need to be in a voice channel.");
@@ -113,7 +127,7 @@ function pre_play(msg, id)
 			}
 			var len = queues[msg.guild.id].push({
 				"url": id,
-				"requester": msg.author.toString(),
+				"requester": msg.author.username,
 				"vc": msg.member.voiceChannel,
 				"tc": msg.channel
 			});
@@ -169,7 +183,7 @@ client.on('message', msg => {
 	{
 		msg.delete();
 		msg.author.sendMessage("ｎｉｃｅ ｍｅｍｅ ｋｉｄｄｏ");
-		msg.channel.guild.members.find("id", config.id).setNickname("VAPOURBOT / 蒸気ロボット");
+		msg.channel.guild.members.find("id", client.user.id).setNickname("VAPOURBOT / 蒸気ロボット");
 	}
 	else if (msg.content.startsWith(config.prefix+"queue"))
 	{
@@ -177,7 +191,7 @@ client.on('message', msg => {
 		{
 			var str = "\n";
 			queues[msg.guild.id].forEach((e, i) => {
-				str += `${i+1}. **${e.title}** (\`https://youtu.be/${e.url}\`) - Requested by ${e.requester}\n`;
+				str += `${i+1}. **${e.title}** (\`https://youtu.be/${e.url}\`) - Requested by **${e.requester}**\n`;
 			});
 			msg.reply(str);
 		}
@@ -206,12 +220,14 @@ client.on('message', msg => {
 	}
 	else if (msg.content.startsWith(config.prefix+"help"))
 	{
+		var external_ip = "";
 		msg.reply(`\n\`${config.prefix}vapour [YouTube video]\` - plays a YouTube video (by name or URL) in vaporwave style.\n`+
 			`\`${config.prefix}vapor [YouTube video]\` - same function as \`${config.prefix}vapour\`.\n`+
 			`\`${config.prefix}queue\` - Displays the current queue of requested songs and who requested them.\n`+
 			`\`${config.prefix}wide [text]\` - Converts normal text into ｗｉｄｅ ｔｅｘｔ．\n`+
 			`\`${config.prefix}spacify [text]\` - Converts normal text into s p a c i f i e d  t e x t .\n`+
-			`\`${config.prefix}help\` - Shows this message.`);
+			`\`${config.prefix}help\` - Shows this message.\n`+
+			`You can view a list of songs I have processed and download them at `);
 	}
 	else
 	{
@@ -232,7 +248,7 @@ function next_in_queue(msg)
 				var next = queues[id][queues[id].length - 1];
 				if (next)
 				{
-					msg.channel.sendMessage(`Now Playing: **${next.title}** - \`https://youtu.be/${next.url}\` (requested by ${next.requester})`);
+					msg.channel.sendMessage(`Now Playing: **${next.title}** - \`https://youtu.be/${next.url}\` (requested by **${next.requester}**)`);
 					queues[id].splice(queues[id][0], 1);
 					// dat recursion
 					next_in_queue(msg);

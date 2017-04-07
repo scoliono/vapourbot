@@ -30,8 +30,6 @@ Download a ZIP of the repository, and extract it. You will need to have [Node.js
 
 **token** - Discord bot login token. Get this at <https://discordapp.com/developers/applications/me>.
 
-**id** - The bot's client ID. Go to the link above, go to App Details -> Client ID.
-
 **yt_key** - For searching using the YouTube Data API. Go to <https://console.developers.google.com/apis/api/youtube.googleapis.com/overview>, make a project, and get an API key.
 
 ## For Server Administrators

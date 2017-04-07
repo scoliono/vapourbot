@@ -5,7 +5,9 @@ const Discord = require("discord.js"),
 	ffmpeg = require('fluent-ffmpeg'),
 	exec = require('child_process').exec,
 	yts = require('youtube-search'),
-    config = require('./auth.json');
+	pip = require('public-ip'),
+    config = require('./auth.json'),
+	server_cfg = require('./server/server.json');
 
 var connections = [];
 var queues = {
@@ -220,14 +222,15 @@ client.on('message', msg => {
 	}
 	else if (msg.content.startsWith(config.prefix+"help"))
 	{
-		var external_ip = "";
-		msg.reply(`\n\`${config.prefix}vapour [YouTube video]\` - plays a YouTube video (by name or URL) in vaporwave style.\n`+
-			`\`${config.prefix}vapor [YouTube video]\` - same function as \`${config.prefix}vapour\`.\n`+
-			`\`${config.prefix}queue\` - Displays the current queue of requested songs and who requested them.\n`+
-			`\`${config.prefix}wide [text]\` - Converts normal text into ｗｉｄｅ ｔｅｘｔ．\n`+
-			`\`${config.prefix}spacify [text]\` - Converts normal text into s p a c i f i e d  t e x t .\n`+
-			`\`${config.prefix}help\` - Shows this message.\n`+
-			`You can view a list of songs I have processed and download them at `);
+		pip.v4().then(ip => {
+			msg.reply(`\n\`${config.prefix}vapour [YouTube video]\` - plays a YouTube video (by name or URL) in vaporwave style.\n`+
+				`\`${config.prefix}vapor [YouTube video]\` - same function as \`${config.prefix}vapour\`.\n`+
+				`\`${config.prefix}queue\` - Displays the current queue of requested songs and who requested them.\n`+
+				`\`${config.prefix}wide [text]\` - Converts normal text into ｗｉｄｅ ｔｅｘｔ．\n`+
+				`\`${config.prefix}spacify [text]\` - Converts normal text into s p a c i f i e d  t e x t .\n`+
+				`\`${config.prefix}help\` - Shows this message.\n`+
+				`You can view and download the songs I have processed at http://${ip}${(server_cfg.port == 80) ? "" : ":"+ server_cfg.port}/`);
+		});
 	}
 	else
 	{

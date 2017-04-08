@@ -53,6 +53,11 @@ function get_dir_listing()
             }
             files.splice(files.indexOf(".gitignore"), 1);
 
+            if (!files[0])
+            {
+                resolve([]);
+            }
+
             // remove duplicate files from our listing
             // Make this its own for loop because the array is being mutated
             var len = files.length;
@@ -172,7 +177,6 @@ app.get("/downloads/:id.wav", (req, res) => {
 
 app.get("/files", (req, res) => {
     get_dir_listing().then(l => {
-        console.log(l);
         res.json(l);
     });
 });

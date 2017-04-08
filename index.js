@@ -36,72 +36,57 @@ function play(connection, id, msg)
 		connections[connection.channelID] = connection;
 		if (connection.playing)
 		{
-			reject(Error("Already playing a song!"));
+			reject(new Error("Already playing a song!"));
 		}
 		var already_downloaded = fs.existsSync(`./downloads/${id}p.wav`);
 		if (!already_downloaded)
 		{
 			var dl_msg;
 			var last_progress_update = 0;
-			msg.reply("Downloading...").then(m => {
+			msg.channel.sendMessage("Downloading...").then(m => {
 				dl_msg = m;
-			}).catch((err) => {
-				reject(Error(err));
-			});
-			ytdl("http://www.youtube.com/watch?v="+id, { filter: 'audioonly' }).on('progress', (chunk, downloaded, total) => {
-				//console.log(`PROGRESS: ${downloaded}/${total}`)
-				last_progress_update++;
-				// idk
-				if (last_progress_update % 100 == 0 || downloaded >= total)
-				{
-					dl_msg.edit("Downloading... "+ ((downloaded >= total) ? ":100: %" : ("`"+get_spinner()+"`")))
-					.then(() => {
-						if (downloaded >= total)
-						{
-								console.log(downloaded, total)
-								msg.channel.sendMessage("Processing...");
-								// So that it doesn't fire twice
-								var done_yet = false;
-								console.log(id)
-								var command = ffmpeg(`./downloads/${id}.ogg`).format("wav").audioBitrate('48k').on('progress', function(progress) {
-									console.log('Processing: ' + progress.percent + '% done');
-									if (progress.percent === undefined)
-									{
-										console.error("Started processing too early.");
-										//command.kill();
-									}
-									if (Math.round(progress.percent) >= 100 && !done_yet)
-									{
-										done_yet = true;
+				ytdl("http://www.youtube.com/watch?v="+id, { filter: 'audioonly' }).on('progress', (chunk, downloaded, total) => {
+					//console.log(`PROGRESS: ${downloaded}/${total}`)
+					last_progress_update++;
+					// idk
+					if (last_progress_update % 100 == 0 || downloaded >= total)
+					{
+						dl_msg.edit("Downloading... "+ ((downloaded >= total) ? ":100: %" : ("`"+get_spinner()+"`")))
+						.then(() => {
+							if (downloaded >= total)
+							{
+									//console.log(downloaded, total)
+									msg.channel.sendMessage("Processing...");
+									console.log("Downloaded http://youtu.be/"+id);
+									var command = ffmpeg(`./downloads/${id}.ogg`).format("wav").audioBitrate('48k').on('end', (stdout, stderr) => {
+										console.log("Successfully converted https://youtu.be/"+ id);
 										msg.channel.sendMessage("(1/2) FFmpeg conversion done.");
 										// Floral Shoppe: ~60% tempo, P4 down (-500 cents).
 										exec(`sox ./downloads/${id}.wav ./downloads/${id}p.wav tempo 0.6 pitch -500`, (error, stdout, stderr) => {
 											msg.channel.sendMessage("(2/2) SoX effects done. Will begin streaming.");
 											var stream = fs.createReadStream(`./downloads/${id}p.wav`);
 											connection.playStream(stream).on('end', () => {resolve();});
-											console.log(`Now deleting unprocessed files for ID ${id}...`);
 											var saved = (fs.statSync("./downloads/"+id+".wav").size + fs.statSync("./downloads/"+id+".ogg").size)/1024.0/1024.0;
 											exec(`rm ./downloads/${id}.ogg ./downloads/${id}.wav`, (error, stdout, stderr) => {
-												console.log("Conserved "+ saved.toFixed(2) +" MB");
+												console.log(`Conserved ${saved.toFixed(2)} MB deleting old files for http://youtu.be/${id}`);
 											});
 											//bot.createMessage(now.txt, `Playing **${now.name}**`);
 											//return stream;
 										});
-									}
-								}).on("error", err => {
-									console.info("FFmpeg is kill");
-									reject(err);
-								}).save(`./downloads/${id}.wav`);
-							}
-					})
-					.catch(console.error);
-					last_progress_update = Date.now();
-				}
-			}).pipe(fs.createWriteStream(`./downloads/${id}.ogg`));
+									}).save(`./downloads/${id}.wav`);
+								}
+						})
+						.catch(console.error);
+						last_progress_update = Date.now();
+					}
+				}).pipe(fs.createWriteStream(`./downloads/${id}.ogg`));
+			}).catch((err) => {
+				reject(new Error(err));
+			});
 		}
 		else
 		{
-			console.log("streaming cached");
+			console.log(`No need to download http://youtu.be/${id}; I have it cached.`);
 			msg.channel.sendMessage("Already downloaded & processed. Streaming cached version...");
 			var stream = fs.createReadStream("./downloads/"+id+'p.wav');
 			connection.playStream(stream).on('end', () => {resolve();});
@@ -127,18 +112,23 @@ function pre_play(msg, id)
 				new_to_queue = true;
 				queues[msg.guild.id] = [];
 			}
-			var len = queues[msg.guild.id].push({
-				"url": id,
-				"requester": msg.author.username,
-				"vc": msg.member.voiceChannel,
-				"tc": msg.channel
-			});
 			ytdl.getInfo("https://youtube.com/watch?v="+id, options=null, (err, info) => {
-				console.log(info.title);
-				queues[msg.guild.id][len-1].title = info.title;
+				if (err)
+				{
+					console.error(err);
+				}
+				console.log(`Fetched title for http://youtu.be/${id}: "${info.title}"`);
+				queues[msg.guild.id].push({
+					"url": id,
+					"requester": msg.author.username,
+					"vc": msg.member.voiceChannel,
+					"tc": msg.channel,
+					"title": info.title
+				});
+
+				if (new_to_queue) next_in_queue(msg, 0);
+				else msg.reply("I've added your song request to the queue.");
 			});
-			if (new_to_queue) next_in_queue(msg);
-			else msg.reply("I've added your song request to the queue.");
 	}
 }
 
@@ -167,7 +157,7 @@ client.on('message', msg => {
 				//console.log(results)
 				if (err)
 				{
-					console.log(err);
+					console.error(err);
 					msg.reply(`Failed to search for video \`${url}\``);
 				}
 				else
@@ -238,35 +228,31 @@ client.on('message', msg => {
 });
 
 // Loops through queue.
-function next_in_queue(msg)
+function next_in_queue(msg, index)
 {
 	var id = msg.guild.id;
-	var last = queues[id][queues[id].length-1];
-	if (queues[id][0] == last)
-	{
-		last.vc.join().then(connection => {
-			console.log("Connected");
-			play(connection, last.url, msg).then(() => {
-				console.log("Stream ended.");
-				var next = queues[id][queues[id].length - 1];
-				if (next)
-				{
-					msg.channel.sendMessage(`Now Playing: **${next.title}** - \`https://youtu.be/${next.url}\` (requested by **${next.requester}**)`);
-					queues[id].splice(queues[id][0], 1);
-					// dat recursion
-					next_in_queue(msg);
-				}
-				else
-				{
-					msg.channel.sendMessage("I've played every song in the queue.");
-					last.vc.leave();
-					queues[id] = [];
-				}
-			}).catch((err) => {
-				console.error(err);
-			});
+	var current = queues[id][index];
+	current.vc.join().then(connection => {
+		console.log("Connected to voice in guild "+ msg.guild.id);
+		play(connection, current.url, msg).then(() => {
+			var next = queues[id][index + 1];
+			console.log("Stream ended in guild "+ msg.guild.id +". "+ (next ? "Now playing http://youtu.be/"+next.title : "Queue is done.") );
+			if (next)
+			{
+				msg.channel.sendMessage(`Now Playing: **${next.title}** - \`https://youtu.be/${next.url}\` (requested by **${next.requester}**)`);
+				// dat recursion
+				next_in_queue(msg, index + 1);
+			}
+			else
+			{
+				msg.channel.sendMessage("I've played every song in the queue.");
+				current.vc.leave();
+				queues[id] = [];
+			}
+		}).catch((err) => {
+			console.error(err);
 		});
-	}
+	});
 }
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {

@@ -36,7 +36,7 @@ function get_yt_title(file, id, state)
                 if (JSON.parse(body).error)
                     reject(JSON.parse(body).error.code);
                 else
-                    reject("Bad video ID");
+                    resolve("null");
             }
         });
     });

@@ -8,15 +8,24 @@ VapourBot is still in development, and new features may be added along the way.
 
 To use these, simply type out the command preceded by the command prefix. This is customizable and thus may vary from server to server, so ask the person who configured the bot for this.
 
-Command                  | What it Does                                                         
------------------------- | ---------------------------------------------------------------------
-`vapor <YouTube video>`  | Plays a YouTube video (by name or URL) in vaporwave style.           
-`vapour <YouTube video>` | Alias of "vapor".                                                    
-`nick`                   | Changes the bot's nickname in the current server. (Easter egg)       
-`queue`                  | Displays the current queue of requested songs and who requested them.
-`wide <text>`            | Converts normal text into fullwidth text.                            
-`spacify <text>`         | Inserts a space between each character of a string.                  
-`help`                   | Sends a list of commands and their usage.                            
+Command                   | What it Does                                                         
+------------------------- | ---------------------------------------------------------------------
+`vapour <YouTube video>`  | Plays a YouTube video (by name or URL) in vaporwave style.
+`vapor <YouTube video>`   | Alias of `vapour`.
+`nick`                    | Changes the bot's nickname in the current server. (Easter egg)
+`queue`                   | Displays the current queue of requested songs and who requested them.
+`wide <text>`             | Converts normal text into fullwidth text.
+`spacify<num> <text>`     | Inserts `num` spaces between each character of a string. If no `num` is provided, it will default to 1.
+`mocking <text>`          | Alternates the cases of each character in the string, `LiKe tHiS`.
+`block <text>`            | Converts each character of a string into a regional indicator emoji.
+`palindrome <text>`       | Creates a palindrome of the first two letters of every word.
+`vertical <text>`         | Writes a message vertically as well as horizontally.
+`pyramid <word> <phrase>` | Cleverly combines a word and a phrase.
+`ping`                    | Pings the bot and reports response time.
+`graph <function>`        | Graphs a mathematical function using Wolfram\|Alpha.
+`mfw vapour [-nsfw]`      | Returns a random reaction image from 4chan. The optional `-nsfw` flag searches NSFW boards as well.
+`mfw vapor [-nsfw]`       | Alias of `mfw vapour`.
+`help`                    | Shows a list of commands and their usage.
 
 ## Installation
 
@@ -33,6 +42,10 @@ To start the web server, navigate into the `server` directory in your terminal a
 **token** - Discord bot login token. Get this at <https://discordapp.com/developers/applications/me>.
 
 **yt_key** - For searching using the YouTube Data API. Go to <https://console.developers.google.com/apis/api/youtube.googleapis.com/overview>, make a project, and get an API key.
+
+**owner** - The ID of the owner of the bot. (Enable Developer Mode in Discord, right-click on your name, then "Copy ID".)
+
+**wolfram_key** - Wolfram|Alpha AppID. (Go to <https://developer.wolframalpha.com/portal/myapps> and click on "Get an AppID".)
 
 ### server/server.json Attributes
 

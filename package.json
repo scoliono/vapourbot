@@ -1,7 +1,7 @@
 {
     "name": "vapourbot",
     "description": "Discord vaporwave music streaming bot",
-    "version": "1.0.0",
+    "version": "0.2.0",
     "author": {
         "name": "scoliono",
         "url": "http://github.com/scoliono"
@@ -20,7 +20,10 @@
         "pug": "^2.0.0beta",
         "queue": "^4.2.1",
         "public-ip": "^2.3.3",
-	    "serve-favicon": "^2.4.2"
+        "serve-favicon": "^2.4.2",
+        "wolfram": "^0.3.4",
+        "request": "^2.81.0"
+        "html-md": "^3.0.2"
     },
     "keywords": [
         "discord"

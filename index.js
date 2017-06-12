@@ -7,7 +7,11 @@ const Discord = require("discord.js"),
 	yts = require('youtube-search'),
 	pip = require('public-ip'),
     config = require('./auth.json'),
-	server_cfg = require('./server/server.json');
+	server_cfg = require('./server/server.json'),
+	request = require('request'),
+	md = require("html-md"),
+	async = require("async"),
+	wolfram = require('wolfram').createClient(config.wolfram_key);
 
 var connections = [];
 var queues = {

@@ -52,7 +52,6 @@ function play(connection, id, msg)
 			msg.channel.sendMessage("Downloading...").then(m => {
 				dl_msg = m;
 				ytdl("http://www.youtube.com/watch?v="+id, { filter: 'audioonly' }).on('progress', (chunk, downloaded, total) => {
-					//console.log(`PROGRESS: ${downloaded}/${total}`)
 					last_progress_update++;
 					// idk
 					if (last_progress_update % 100 == 0 || downloaded >= total)
@@ -62,14 +61,14 @@ function play(connection, id, msg)
 							if (downloaded >= total)
 							{
 									//console.log(downloaded, total)
-									msg.channel.sendMessage("Processing...");
+									dl_msg.edit("Processing...");
 									console.log("Downloaded http://youtu.be/"+id);
 									var command = ffmpeg(`./downloads/${id}.ogg`).format("wav").audioBitrate('48k').on('end', (stdout, stderr) => {
 										console.log("Successfully converted https://youtu.be/"+ id);
-										msg.channel.sendMessage("(1/2) FFmpeg conversion done.");
+										dl_msg.edit("(50%) Conversion done.");
 										// Floral Shoppe: ~60% tempo, P4 down (-500 cents).
 										exec(`sox ./downloads/${id}.wav ./downloads/${id}p.wav tempo 0.6 pitch -500`, (error, stdout, stderr) => {
-											msg.channel.sendMessage("(2/2) SoX effects done. Will begin streaming.");
+											dl_msg.edit("(100%) Processed. Will begin streaming.");
 											var stream = fs.createReadStream(`./downloads/${id}p.wav`);
 											connection.playStream(stream).on('end', () => {resolve();});
 											var saved = (fs.statSync("./downloads/"+id+".wav").size + fs.statSync("./downloads/"+id+".ogg").size)/1024.0/1024.0;

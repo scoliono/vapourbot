@@ -17,6 +17,8 @@ var queues = {
 	]
 };
 
+var servers_joined = 0;
+
 const spinner_array = [ "-", "\\", "|", "/" ];
 var spinner_index = -1;
 
@@ -271,6 +273,6 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 client.on('ready', () => {
     console.log('Logged in.');
 	setInterval(() => {
-		client.user.setStatus('online', `[${Object.keys(queues).length-1}] ＣＨＩＰ＇Ｓ ＣＨＡＬＬＥＮＧＥ`);
+		client.user.setStatus('online', `${config.prefix}help | Serving ${client.guilds.array().length} servers`);
 	}, 5000);
 });

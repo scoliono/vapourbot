@@ -19,7 +19,11 @@ html(lang="en")
                 th Status
             each item in files
                 tr
-                    td= item.name
+                    if item.name != "null"
+                        td= item.name
+                    else
+                        td
+                            i Unknown video
                     td
                         a(href="//youtu.be/"+ item.id) Source
                     td

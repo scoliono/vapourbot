@@ -34,6 +34,10 @@ To start the web server, navigate into the `server` directory in your terminal a
 
 **yt_key** - For searching using the YouTube Data API. Go to <https://console.developers.google.com/apis/api/youtube.googleapis.com/overview>, make a project, and get an API key.
 
+**owner** - The ID of the owner of the bot. (Enable Developer Mode in Discord, right-click on your name, then "Copy ID".)
+
+**wolfram_key** - Wolfram|Alpha AppID. (Go to <https://developer.wolframalpha.com/portal/myapps> and click on "Get an AppID".)
+
 ### server/server.json Attributes
 
 **port** - Which port to listen on. (e.g. `8080`)

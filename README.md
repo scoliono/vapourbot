@@ -22,7 +22,9 @@ Command                  | What it Does
 
 Download a ZIP of the repository, and extract it. You will need to have [Node.js](https://nodejs.org/), [SoX](http://sox.sourceforge.net/), and [FFmpeg](http://ffmpeg.org/) on your computer. Then, navigate to the repository's directory and run `npm install` in a terminal. You will have to copy `auth_example.json` to `auth.json` and modify it so the bot can sign in. To run the bot, type `node index.js` in a terminal.
 
-*Note:* The bot caches YouTube videos that it downloads, and this could potentially take up a lot of storage. Use it at your own risk.
+To start the web server, navigate into the `server` directory in your terminal and run `node server.js`. You will first have to configure this by copying `server_example.json` to `server.json` and modifying the values.
+
+*Note:* The bot keeps YouTube videos that it downloads and processes, and this could potentially take up a lot of storage. Use it at your own risk.
 
 ### auth.json Attributes
 
@@ -30,9 +32,13 @@ Download a ZIP of the repository, and extract it. You will need to have [Node.js
 
 **token** - Discord bot login token. Get this at <https://discordapp.com/developers/applications/me>.
 
-**id** - The bot's client ID. Go to the link above, go to App Details -> Client ID.
-
 **yt_key** - For searching using the YouTube Data API. Go to <https://console.developers.google.com/apis/api/youtube.googleapis.com/overview>, make a project, and get an API key.
+
+### server/server.json Attributes
+
+**port** - Which port to listen on. (e.g. `8080`)
+
+**yt_key** - The same YouTube API key as the one in `auth.json`.
 
 ## For Server Administrators
 

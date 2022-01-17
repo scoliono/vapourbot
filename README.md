@@ -29,7 +29,7 @@ Command                   | What it Does
 
 ## Installation
 
-Download a ZIP of the repository, and extract it. You will need to have [Node.js](https://nodejs.org/), [SoX](http://sox.sourceforge.net/), and [FFmpeg](http://ffmpeg.org/) on your computer. Then, navigate to the repository's directory and run `npm install` in a terminal. You will have to copy `auth_example.json` to `auth.json` and modify it so the bot can sign in. To run the bot, type `node index.js` in a terminal.
+Download a ZIP of the repository, and extract it. You will need to have [Node.js](https://nodejs.org/), [SoX](http://sox.sourceforge.net/), [TiMidity++](http://timidity.sourceforge.net/), [ImageMagick](https://imagemagick.org/script/binary-releases.php), and [FFmpeg](http://ffmpeg.org/) on your computer. Then, navigate to the repository's directory and run `npm install` in a terminal. You will have to copy `auth_example.json` to `auth.json` and modify it so the bot can sign in. To run the bot, type `node index.js` in a terminal.
 
 To start the web server, navigate into the `server` directory in your terminal and run `node server.js`. You will first have to configure this by copying `server_example.json` to `server.json` and modifying the values.
 

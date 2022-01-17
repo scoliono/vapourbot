@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    table(class='table table-striped table-responsive')
+        tr
+            th Command
+            th Arguments
+            th Description
+        each command in commands
+            if command.description
+                tr
+                    td
+                        b #{prefix}#{command.name}
+                    if command.args
+                        td= command.args
+                    else
+                        td
+                            i none
+                    td= command.description

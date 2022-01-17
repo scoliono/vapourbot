@@ -1,121 +1,225 @@
-{
-    "vapor":
+[
     {
-        "module": "SoX",
+        "name": "vapor",
+        "module": "Music",
         "args": " <YouTube URL | video name>",
         "description": "Plays a YouTube video (by name or URL) in vaporwave style."
     },
-    
-    "vapour":
+
     {
-        "module": "SoX",
+        "name": "vapour",
+        "module": "Music",
         "args": " <YouTube URL | video name>",
         "description": "Plays a YouTube video (by name or URL) in vapourwave style."
     },
 
-    "earrape":
     {
-        "module": "SoX",
+        "name": "earrape",
+        "module": "Music",
         "args": " <YouTube URL | video name> [Gain dB] [Bass Boost dB]",
-        "description": "Plays a YouTube video (by name or URL) in earrape style. **Warning: Loud!** I do not take responsibility for any hearing loss you inflict upon yourself :^)"
+        "description": "Plays a YouTube video (by name or URL) in earrape style. WARNING: May be loud! I do not take responsibility for any hearing loss you inflict upon yourself :^)"
     },
 
-    "play":
     {
-        "module": "SoX",
+        "name": "play",
+        "module": "Music",
         "args": " <YouTube URL | video name>",
-        "description": "Plays a YouTube video (by name or URL) with no effects."
+        "description": "Plays a YouTube video (by name or URL) with no special effects."
     },
 
-    "queue":
     {
-        "module": "SoX",
-        "description": "Shows the current queue of requested songs and who requested them."
+        "name": "midi",
+        "module": "Music",
+        "args": " <MIDI file URL>",
+        "description": "Synthesizes and plays a MIDI file. (Not all instruments are supported yet)"
     },
 
-    "skip":
     {
-        "module": "SoX",
-        "description": "Skips the song that is currently playing."
+        "name": "reverse",
+        "module": "Music",
+        "args": " <YouTube URL | video name>",
+        "description": "Plays a YouTube video (by name or URL) in reverse."
     },
 
-    "wide":
     {
-        "module": "StrOperations",
+        "name": "lofi",
+        "module": "Music",
+        "args": " <YouTube URL | video name>",
+        "description": "Plays a YouTube video (by name or URL) with low quality."
+    },
+
+    {
+        "name": "queue",
+        "module": "Music",
+        "description": "Shows the current queue of requested songs."
+    },
+
+    {
+        "name": "skip",
+        "module": "Music",
+        "description": "Votes to skip the song that is currently playing."
+    },
+
+    {
+        "name": "forceskip",
+        "module": "Music",
+        "description": "Forces the song that is currently playing to be skipped. (Admins only)"
+    },
+
+    {
+        "name": "soundcloud",
+        "module": "Music",
+        "args": " <Soundcloud URL>",
+        "description": "Plays a Soundcloud song given its URL."
+    },
+
+    {
+        "name": "vocaroo",
+        "module": "Music",
+        "args": " <Vocaroo URL>",
+        "description": "Plays a Vocaroo sound file given its full URL."
+    },
+
+    {
+        "name": "repeat",
+        "module": "Music",
+        "description": "Puts the current song in the queue on repeat."
+    },
+
+    {
+        "name": "sound",
+        "module": "Music",
+        "args": " <sound name>",
+        "description": "Plays a soundbite given its filename."
+    },
+    
+    {
+        "name": "tts",
+        "module": "Music",
+        "args": " <text>",
+        "description": "Text-to-speech using the Moonbase Alpha voice (an implementation of DECtalk)."
+    },
+
+    {
+        "name": "cas",
+        "module": "ImageMagick",
+        "description": "Applies Content-Aware Scale to the attached image or the last image sent in the channel."
+    },
+
+    {
+        "name": "wide",
+        "module": "Strings",
         "args": " <text>",
         "description": "Converts normal text into ｗｉｄｅ ｔｅｘｔ."
     },
 
-    "spacify":
     {
-        "module": "StrOperations",
-        "args": "[num] <text>",
-        "description": "Converts normal text into s p a c i f i e d  t e x t. `num` specifies how many spaces to put between each word, default is 1."
+        "name": "space",
+        "module": "Strings",
+        "args": " [num] <text>",
+        "description": "Converts normal text into s p a c e d  t e x t. `num` specifies how many spaces to put between each word, default is 1."
     },
-    
-    "mocking":
+
     {
-        "module": "StrOperations",
+        "name": "mocking",
+        "module": "Strings",
         "args": " <text>",
         "description": "ThIs iS NoT A DeAd mEmE."
     },
-    
-    "block":
+
     {
-        "module": "StrOperations",
+        "name": "block",
+        "module": "Strings",
         "args": " <text>",
-        "description": "Converts normal text into :regional_indicator_b: :regional_indicator_l: :regional_indicator_o: :regional_indicator_c: :regional_indicator_k: :regional_indicator_y: text."
+        "description": "Converts normal text into 🇧 🇱 🇴 🇨 🇰 🇾 text."
     },
 
-    "palindrome":
     {
-        "module": "StrOperations",
+        "name": "palindrome",
+        "module": "Strings",
         "args": " <text>",
         "description": "Converts every word into a palindrome of itself."
     },
 
-    "vertical":
     {
-        "module": "StrOperations",
+        "name": "vertical",
+        "module": "Strings",
         "args": " <text>",
         "description": "Writes a message vertically as well as horizontally."
     },
 
-    "pyramid":
     {
-        "module": "StrOperations",
+        "name": "pyramid",
+        "module": "Strings",
         "args": " <word> <phrase>",
         "description": "Cleverly combines a word and a phrase."
     },
 
-    "graph":
     {
+        "name": "graph",
         "module": "Wolfram",
         "args": " <function>",
         "description": "Graphs a mathematical function using Wolfram|Alpha."
     },
 
-    "ping":
     {
+        "name": "latex",
+        "module": "Wolfram",
+        "args": " <equation>",
+        "description": "Renders LaTeX text."
+    },
+
+    {
+        "name": "ping",
         "module": "Ping",
         "description": "Pings the bot to check response time."
     },
 
-    "mfw":
     {
+        "name": "mfw",
         "module": "Chan",
-        "args": " [-nsfw]",
-        "description": "Returns a random reaction image from 4chan. The optional `-nsfw` flag searches NSFW boards as well."
+        "args": " [nsfw]",
+        "description": "Returns a random reaction image from 4chan. Adding `nsfw` to the end will search both SFW and NSFW boards."
     },
 
-    "nick":
     {
+        "name": "nick",
         "module": "Nickname"
     },
 
-    "help":
     {
+        "name": "restart",
+        "module": "Admin",
+        "description": "Restarts the bot. [Bot owner only]"
+    },
+
+    {
+        "name": "shutdown",
+        "module": "Admin",
+        "description": "Shuts down the bot. [Bot owner only]"
+    },
+
+    {
+        "name": "invite",
         "module": "Help",
-        "description": "A list of all available commands and what they do."
+        "description": "Sends a link to invite the bot to another Discord server."
+    },
+
+    {
+        "name": "songs",
+        "module": "Help",
+        "description": "Sends a link to the Processed Songs page of VapourBot's website."
+    },
+
+    {
+        "name": "about",
+        "module": "Help",
+        "description": "Sends a link to VapourBot's website."
+    },
+
+    {
+        "name": "help",
+        "module": "Help",
+        "description": "Sends a link to this page."
     }
-}
+]

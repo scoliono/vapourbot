@@ -1,0 +1,36 @@
+extends layout
+
+block content
+    div(class="col-md-1")
+        img(src="vapour.jpg", height="100")
+    div(class="col-md-8")
+        h1 VapourBot
+        i The world's first automated musical shitposter.
+    table(class="table table-striped table-responsive")
+        tr
+            th Song Name
+            th Original
+            th Vaporwave
+            th Size
+            th Duration
+            th Status
+        each item in files
+            tr
+                if item.name != "null"
+                    td= item.name
+                else
+                    td
+                        i Unknown video
+                td
+                    a(href="//youtu.be/"+ item.id) Source
+                td
+                    audio(controls)
+                        source(src="/downloads/"+ item.file)
+                        p Your browser doesn't support the audio tag.
+                td= item.size
+                td= item.duration
+                td= item.state
+    div(class="col-md-2", style="padding-bottom: 50px")
+        small VapourBot is
+            a(href="//github.com/scoliono/VapourBot") open source
+            | .
